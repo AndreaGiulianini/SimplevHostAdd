@@ -32,7 +32,7 @@ public class Gui {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Interfaccia window = new Interfaccia();
+					Gui window = new Gui();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,7 +44,7 @@ public class Gui {
 	/**
 	 * Create the application.
 	 */
-	public Interfaccia() {
+	public Gui() {
 		initialize();
 	}
 
