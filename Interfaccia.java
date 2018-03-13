@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.JFileChooser;
 import java.io.*;
 
-public class Interfaccia {
+public class Gui {
 
 	private JFrame frame;
 	private JTextField txtName;
