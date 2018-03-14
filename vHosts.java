@@ -1,30 +1,24 @@
-package vHosts;
+package vHostsAdd;
 
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
-import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JTextField;
 import javax.swing.JFileChooser;
 import java.io.*;
 
-public class Gui {
+public class vHosts {
 
 	private JFrame frame;
 	private JTextField txtName;
 	private File filevHosts;
 	private File fileHosts;
 	private File dir;
-	private FileWriter fwVH;
-	private FileWriter fwH;
-	private BufferedWriter bwVH; 
-	private BufferedWriter bwH;
 	/*
 	 * Launch the application.
 	 */
@@ -32,7 +26,7 @@ public class Gui {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Gui window = new Gui();
+					vHosts window = new vHosts();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,7 +38,7 @@ public class Gui {
 	/**
 	 * Create the application.
 	 */
-	public Gui() {
+	public vHosts() {
 		initialize();
 	}
 
@@ -102,14 +96,11 @@ public class Gui {
 		JButton btnOK = new JButton("Confirm");
 		btnOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if ( filevHosts.exists() && fileHosts.exists() && dir.exists())
-				{ 
-					try {
+				if ( filevHosts.exists() && fileHosts.exists() && dir.exists()){ 
+					try{
 						FileWriter fwVH = new FileWriter(filevHosts.getAbsoluteFile(),true);
 						FileWriter fwH = new FileWriter(fileHosts.getAbsoluteFile(),true);
-						@SuppressWarnings("resource")
 						BufferedWriter bwVH = new BufferedWriter(fwVH);
-						@SuppressWarnings("resource")
 						BufferedWriter bwH = new BufferedWriter(fwH);
 						bwVH.write("\n<VirtualHost *:80>\n\tDocumentRoot \""+dir.getAbsolutePath()+"\"\n\tServerName "+txtName.getText()+"\n</VirtualHost>");
 						bwH.write("\n127.0.0.1 "+txtName.getText());
