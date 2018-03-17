@@ -1,16 +1,17 @@
 package vHostsAdd;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JButton;
-import java.awt.FlowLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JFileChooser;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class vHosts {
 
@@ -37,8 +38,9 @@ public class vHosts {
 
 	/**
 	 * Create the application.
+	 * @throws IOException 
 	 */
-	public vHosts() {
+	public vHosts() throws IOException {
 		initialize();
 	}
 
@@ -75,11 +77,10 @@ public class vHosts {
 				project.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		        int returnVal = project.showOpenDialog(null);
 		        if(returnVal == JFileChooser.APPROVE_OPTION) {
-		            dir=project.getCurrentDirectory();
+		            dir=project.getSelectedFile();
 		        }
 			}
 		});
-		
 		
 		JButton btnHosts = new JButton("Hosts");
 		btnHosts.addActionListener(new ActionListener() {
@@ -96,22 +97,31 @@ public class vHosts {
 		JButton btnOK = new JButton("Confirm");
 		btnOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if ( filevHosts.exists() && fileHosts.exists() && dir.exists()){ 
-					try{
-						FileWriter fwVH = new FileWriter(filevHosts.getAbsoluteFile(),true);
-						FileWriter fwH = new FileWriter(fileHosts.getAbsoluteFile(),true);
-						BufferedWriter bwVH = new BufferedWriter(fwVH);
-						BufferedWriter bwH = new BufferedWriter(fwH);
-						bwVH.write("\n<VirtualHost *:80>\n\tDocumentRoot \""+dir.getAbsolutePath()+"\"\n\tServerName "+txtName.getText()+"\n</VirtualHost>");
-						bwH.write("\n127.0.0.1 "+txtName.getText());
-						bwVH.close();
-						bwH.close();
-						fwVH.close();
-						fwH.close();
-						System.exit(0);
-					}catch(IOException e1) {
-						e1.printStackTrace();
+				try{
+					if(filevHosts!=null && fileHosts!=null) {
+						FileWriter fwConfig = new FileWriter(new File("config.txt"));
+						BufferedWriter bwConfig = new BufferedWriter(fwConfig);
+						bwConfig.write(filevHosts.getAbsoluteFile()+"\n"+fileHosts.getAbsoluteFile());
+						bwConfig.close();
+						fwConfig.close();
 					}
+					String linevHosts = Files.readAllLines(Paths.get("config.txt")).get(0);
+					String lineHosts = Files.readAllLines(Paths.get("config.txt")).get(1);
+					FileWriter fwVH = new FileWriter(new File(linevHosts),true);
+					FileWriter fwH = new FileWriter(new File(lineHosts),true);
+					BufferedWriter bwVH = new BufferedWriter(fwVH);
+					BufferedWriter bwH = new BufferedWriter(fwH);
+			
+					bwVH.write("\n<VirtualHost *:80>\n\tDocumentRoot \""+dir.toString()+"\"\n\tServerName "+txtName.getText()+"\n</VirtualHost>\n");
+					bwH.write("\n127.0.0.1 "+txtName.getText()+"\n");
+					bwVH.close();
+					bwH.close();
+					fwVH.close();
+					fwH.close();
+					
+					System.exit(0);
+				}catch(IOException e1) {
+					e1.printStackTrace();
 				}
 			}
 		});
